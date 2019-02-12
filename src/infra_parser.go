@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
+	"path/filepath"
 	"regexp"
 
 	"github.com/newrelic/infra-integrations-sdk/data/metric"
@@ -10,51 +12,57 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-// collectionDefinitionParser is a struct to aid the automatic
+type infraJmxParser struct {
+}
+
+func (p infraJmxParser) parse(f string) ([]*domainDefinition, error) {
+	// Check that the filepath is an absolute path
+	if !filepath.IsAbs(f) {
+		log.Error("Invalid configuration file path %s. JMX configuration files must be specified as absolute paths.", f)
+		os.Exit(1)
+	}
+
+	// Parse the yaml file into a raw definition
+	collectionDefinition, err := parseYaml(f)
+	if err != nil {
+		log.Error("Failed to parse configuration file %s: %s", f, err)
+		return nil, err
+	}
+
+	// Validate the definition and create a domainDefinition object
+	domainDefinition, err := parseCollectionDefinition(collectionDefinition)
+	if err != nil {
+		log.Error("Failed to parse domainDefinition definition %s: %s", f, err)
+		return nil, err
+	}
+
+	return domainDefinition, nil
+}
+func (p infraJmxParser) isValidFormat(f string) bool {
+	// TODO
+	return true
+}
+
+func init() {
+	addParser(infraJmxParser{})
+}
+
+// collectionDefinition is a struct to aid the automatic
 // parsing of a collection yaml file
-type collectionDefinitionParser struct {
+type collectionDefinition struct {
 	Collect []struct {
-		Domain    string                 `yaml:"domain"`
-		EventType string                 `yaml:"event_type"`
-		Beans     []beanDefinitionParser `yaml:"beans"`
+		Domain    string           `yaml:"domain"`
+		EventType string           `yaml:"event_type"`
+		Beans     []beanDefinition `yaml:"beans"`
 	}
 }
 
-// beanDefinitionParser is a struct to aid the automatic
+// beanDefinition is a struct to aid the automatic
 // parsing of a collection yaml file
-type beanDefinitionParser struct {
+type beanDefinition struct {
 	Query      string        `yaml:"query"`
 	Exclude    interface{}   `yaml:"exclude_regex"`
 	Attributes []interface{} `yaml:"attributes"`
-}
-
-// domainDefinition is a validated and simplified
-// representation of the requested collection parameters
-// from a single domain
-type domainDefinition struct {
-	domain    string
-	eventType string
-	beans     []*beanRequest
-}
-
-// attributeRequest is a storage struct containing
-// the information necessary to turn a JMX attribute
-// into a metric
-type attributeRequest struct {
-	// attrRegexp is a compiled regex pattern that matches the attribute
-	attrRegexp *regexp.Regexp
-	metricName string
-	metricType metric.SourceType
-}
-
-// beanRequest is a storage struct containing the
-// information necessary to query a JMX endpoint
-// and filter the results
-type beanRequest struct {
-	beanQuery string
-	// exclude is a list of compiled regex that matches beans to exclude from collection
-	exclude    []*regexp.Regexp
-	attributes []*attributeRequest
 }
 
 var (
@@ -67,9 +75,9 @@ var (
 	}
 )
 
-// parseYaml reads a yaml file and parses it into a collectionDefinitionParser.
+// parseYaml reads a yaml file and parses it into a collectionDefinition.
 // It validates syntax only and not content
-func parseYaml(filename string) (*collectionDefinitionParser, error) {
+func parseYaml(filename string) (*collectionDefinition, error) {
 	// Read the file
 	yamlFile, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -78,7 +86,7 @@ func parseYaml(filename string) (*collectionDefinitionParser, error) {
 	}
 
 	// Parse the file
-	var c collectionDefinitionParser
+	var c collectionDefinition
 	if err := yaml.Unmarshal(yamlFile, &c); err != nil {
 		log.Error("failed to parse collection: %s", err)
 		return nil, err
@@ -87,9 +95,9 @@ func parseYaml(filename string) (*collectionDefinitionParser, error) {
 	return &c, nil
 }
 
-// parseCollection takes a raw collectionDefinitionParser and returns
+// parseCollection takes a raw collectionDefinition and returns
 // an array of domains containing the validated configuration
-func parseCollectionDefinition(c *collectionDefinitionParser) ([]*domainDefinition, error) {
+func parseCollectionDefinition(c *collectionDefinition) ([]*domainDefinition, error) {
 
 	var err error
 
@@ -127,7 +135,7 @@ func parseCollectionDefinition(c *collectionDefinitionParser) ([]*domainDefiniti
 	return collections, nil
 }
 
-func parseBean(bean *beanDefinitionParser) (*beanRequest, error) {
+func parseBean(bean *beanDefinition) (*beanRequest, error) {
 	attributes, err := parseAttributes(bean.Attributes)
 	if err != nil {
 		return nil, err
@@ -200,23 +208,6 @@ func parseAttributes(rawAttributes []interface{}) ([]*attributeRequest, error) {
 	}
 
 	return attributes, nil
-}
-
-func createAttributeRegex(attrRegex string, literal bool) (*regexp.Regexp, error) {
-	var attrString string
-	// If attrRegex is the actual attribute name, and not a regex match
-	if literal {
-		attrString = regexp.QuoteMeta(attrRegex)
-	} else {
-		attrString = attrRegex
-	}
-
-	r, err := regexp.Compile("attr=" + attrString + "$")
-	if err != nil {
-		return nil, err
-	}
-
-	return r, nil
 }
 
 func parseAttributeFromString(a string) (*attributeRequest, error) {

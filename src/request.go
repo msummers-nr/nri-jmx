@@ -24,12 +24,12 @@ type beanAttrValuePair struct {
 	value    interface{}
 }
 
-func runCollection(collection []*domainDefinition, i *integration.Integration) error {
+func queryJMX(collection []*domainDefinition, i *integration.Integration) error {
 	for _, domain := range collection {
 		var errors []error
 		for _, request := range domain.beans {
 			requestString := fmt.Sprintf("%s:%s", domain.domain, request.beanQuery)
-			result, err := jmxQueryFunc(requestString, args.Timeout)
+			result, err := jmxQuery(requestString, args.Timeout)
 			if err != nil {
 				log.Error("Failed to retrieve metrics for request %s: %s", requestString, err)
 				return err

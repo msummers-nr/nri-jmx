@@ -106,12 +106,12 @@ func TestParseAttributeFromMap(t *testing.T) {
 
 func TestParseBean(t *testing.T) {
 	testCases := []struct {
-		input        *beanDefinitionParser
+		input        *beanDefinition
 		expected     *beanRequest
 		expectedFail bool
 	}{
 		{
-			&beanDefinitionParser{
+			&beanDefinition{
 				Query: "name=test,partition=test",
 			},
 			&beanRequest{
@@ -126,7 +126,7 @@ func TestParseBean(t *testing.T) {
 			false,
 		},
 		{
-			&beanDefinitionParser{
+			&beanDefinition{
 				Query:   "name=test,partition=test",
 				Exclude: []interface{}{"testexclude"},
 			},
@@ -145,7 +145,7 @@ func TestParseBean(t *testing.T) {
 			false,
 		},
 		{
-			&beanDefinitionParser{
+			&beanDefinition{
 				Query:   "name=test,partition=test",
 				Exclude: []interface{}{"testexclude"},
 				Attributes: []interface{}{
@@ -169,7 +169,7 @@ func TestParseBean(t *testing.T) {
 			false,
 		},
 		{
-			&beanDefinitionParser{
+			&beanDefinition{
 				Query:   "name=test,partition=test",
 				Exclude: []interface{}{"testexclude"},
 				Attributes: []interface{}{

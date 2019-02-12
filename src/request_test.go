@@ -13,7 +13,7 @@ import (
 
 func TestRunCollection(t *testing.T) {
 
-	jmxQueryFunc = func(name string, timeout int) (map[string]interface{}, error) {
+	jmxQuery = func(name string, timeout int) (map[string]interface{}, error) {
 		outmap := map[string]interface{}{
 			"java.lang:test1=test1,test2=test2,attr=testattr": "testresult",
 		}
@@ -54,7 +54,7 @@ func TestRunCollection(t *testing.T) {
 
 	i, _ := integration.New("jmxtest", "0.1.0")
 
-	runCollection(collection, i)
+	queryJMX(collection, i)
 
 	if !reflect.DeepEqual(expectedMetrics, i.Entities[0].Metrics[0].Metrics) {
 		fmt.Println(pretty.Diff(expectedMetrics, i.Entities[0].Metrics[0].Metrics))

@@ -15,10 +15,22 @@
 			"revisionTime": "2018-07-24T19:13:49Z"
 		},
 		{
+			"checksumSHA1": "fCc3grA7vIxfBru7R3SqjcW+oLI=",
+			"path": "github.com/alecthomas/units",
+			"revision": "2efee857e7cfd4f3d0138cc3cbb1b4966962b93a",
+			"revisionTime": "2015-10-22T06:55:26Z"
+		},
+		{
 			"checksumSHA1": "CSPbwbyzqA6sfORicn4HFtIhF/c=",
 			"path": "github.com/davecgh/go-spew/spew",
 			"revision": "8991bc29aa16c548c550c7ff78260e27b9ab7c73",
 			"revisionTime": "2018-02-21T22:46:20Z"
+		},
+		{
+			"checksumSHA1": "c0Z2sKLKi+IKRVzq0IzNvqvfCrQ=",
+			"path": "github.com/google/shlex",
+			"revision": "c34317bd91bf98fab745d77b03933cf8769299fe",
+			"revisionTime": "2018-11-06T13:46:48Z"
 		},
 		{
 			"checksumSHA1": "3ohk4dFYrERZ6WTdKkIwnTA0HSI=",
@@ -81,6 +93,36 @@
 			"revisionTime": "2018-08-13T11:54:35Z"
 		},
 		{
+			"checksumSHA1": "uEc9/1HbYGeK7wPStF6FmUlfzGE=",
+			"path": "github.com/nicksnyder/go-i18n/i18n",
+			"revision": "7a73c96f2026ad7c4b56c7a323fb1466374589a5",
+			"revisionTime": "2019-01-06T23:08:51Z"
+		},
+		{
+			"checksumSHA1": "o/4Fy7/+tzNeueNBThMfD1F94PI=",
+			"path": "github.com/nicksnyder/go-i18n/i18n/bundle",
+			"revision": "7a73c96f2026ad7c4b56c7a323fb1466374589a5",
+			"revisionTime": "2019-01-06T23:08:51Z"
+		},
+		{
+			"checksumSHA1": "AdAaAicrUl+1k0wHNsjLU1c6z9A=",
+			"path": "github.com/nicksnyder/go-i18n/i18n/language",
+			"revision": "7a73c96f2026ad7c4b56c7a323fb1466374589a5",
+			"revisionTime": "2019-01-06T23:08:51Z"
+		},
+		{
+			"checksumSHA1": "XfE9yMmmRqZQGbtIP7f6F63Zx0w=",
+			"path": "github.com/nicksnyder/go-i18n/i18n/translation",
+			"revision": "7a73c96f2026ad7c4b56c7a323fb1466374589a5",
+			"revisionTime": "2019-01-06T23:08:51Z"
+		},
+		{
+			"checksumSHA1": "NzzMfGmmPoTGVwLZDkj3FXXDvCA=",
+			"path": "github.com/pelletier/go-toml",
+			"revision": "27c6b39a135b7dc87a14afb068809132fb7a9a8f",
+			"revisionTime": "2018-11-24T00:27:27Z"
+		},
+		{
 			"checksumSHA1": "ljd3FhYRJ91cLZz3wsH9BQQ2JbA=",
 			"path": "github.com/pkg/errors",
 			"revision": "816c9085562cd7ee03e7f8188a1cfd942858cded",
@@ -97,6 +139,12 @@
 			"path": "github.com/stretchr/objx",
 			"revision": "9e1dfc121bca96d392da5d00591953bdb54ab306",
 			"revisionTime": "2018-06-26T19:55:58Z"
+		},
+		{
+			"checksumSHA1": "iBU4tIAdhfmuFGwEjb1yce0Og/4=",
+			"path": "gopkg.in/alecthomas/kingpin.v3-unstable",
+			"revision": "df19058c872cddcd279411d709047160e543a700",
+			"revisionTime": "2018-08-10T19:35:52Z"
 		},
 		{
 			"checksumSHA1": "ZSWoOPUNRr5+3dhkLK3C4cZAQPk=",

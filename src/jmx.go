@@ -2,7 +2,6 @@ package main
 
 import (
 	"os"
-	"path/filepath"
 	"strings"
 
 	sdkArgs "github.com/newrelic/infra-integrations-sdk/args"
@@ -24,15 +23,16 @@ type argumentList struct {
 
 const (
 	integrationName    = "com.newrelic.jmx"
-	integrationVersion = "1.0.1"
+	integrationVersion = "1.2.0"
 )
 
 var (
 	args argumentList
 
-	jmxOpenFunc  = jmx.Open
-	jmxCloseFunc = jmx.Close
-	jmxQueryFunc = jmx.Query
+	// Alias these functions for testing mocks
+	jmxOpen  = jmx.Open
+	jmxClose = jmx.Close
+	jmxQuery = jmx.Query
 )
 
 func main() {
@@ -44,8 +44,14 @@ func main() {
 	}
 	log.SetupLogging(args.Verbose)
 
+	// Ensure a collection file is specified
+	if args.CollectionFiles == "" {
+		log.Error("Must specify at least one configuration file")
+		os.Exit(1)
+	}
+
 	// Open a JMX connection
-	if err := jmxOpenFunc(args.JmxHost, args.JmxPort, args.JmxUser, args.JmxPass); err != nil {
+	if err := jmxOpen(args.JmxHost, args.JmxPort, args.JmxUser, args.JmxPass); err != nil {
 		log.Error(
 			"Failed to open JMX connection (host: %s, port: %s, user: %s, pass: %s): %s",
 			args.JmxHost, args.JmxPort, args.JmxUser, args.JmxPass, err,
@@ -53,45 +59,25 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Ensure a collection file is specified
-	if args.CollectionFiles == "" {
-		log.Error("Must specify at least one collection file")
-		os.Exit(1)
-	}
-
-	// For each collection definition file, parse and collect it
-	collectionFiles := strings.Split(args.CollectionFiles, ",")
-	for _, collectionFile := range collectionFiles {
-
-		// Check that the filepath is an absolute path
-		if !filepath.IsAbs(collectionFile) {
-			log.Error("Invalid metrics collection path %s. Metrics collection files must be specified as absolute paths.", collectionFile)
-			os.Exit(1)
-		}
-
-		// Parse the yaml file into a raw definition
-		collectionDefinition, err := parseYaml(collectionFile)
+	for _, f := range strings.Split(args.CollectionFiles, ",") {
+		p, err := getParser(f)
 		if err != nil {
-			log.Error("Failed to parse collection definition file %s: %s", collectionFile, err)
-			os.Exit(1)
+			continue
 		}
 
-		// Validate the definition and create a collection object
-		collection, err := parseCollectionDefinition(collectionDefinition)
+		d, err := p.parse(f)
 		if err != nil {
-			log.Error("Failed to parse collection definition %s: %s", collectionFile, err)
-			os.Exit(1)
+			continue
 		}
 
-		if err := runCollection(collection, jmxIntegration); err != nil {
-			log.Error("Failed to complete collection: %s", err)
+		err = queryJMX(d, jmxIntegration)
+		if err != nil {
+			log.Error("Failed to process domainDefinition: %s", err)
 		}
 	}
 
-	jmxCloseFunc()
-
+	jmxClose()
 	jmxIntegration.Entities = checkMetricLimit(jmxIntegration.Entities)
-
 	if err := jmxIntegration.Publish(); err != nil {
 		log.Error("Failed to publish integration: %s", err.Error())
 		os.Exit(1)

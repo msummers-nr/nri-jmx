@@ -38,3 +38,6 @@ Session.vim
 # VSCode
 .vscode
 debug
+
+vendor/github.com
+vendor/gopkg.in

@@ -8,8 +8,8 @@ import (
 )
 
 type parser interface {
-	parse(f string) ([]*domainDefinition, error)
-	isValidFormat(f string) bool
+	parse(f []byte) ([]*domainDefinition, error)
+	isValidFormat(f []byte) bool
 }
 
 // domainDefinition is a validated and simplified
@@ -43,18 +43,20 @@ type beanRequest struct {
 
 var parsers []parser
 
-func addParser(p parser) {
+// Parsers must self register, init() is good for that
+func registerParser(p parser) {
 	parsers = append(parsers, p)
 }
 
-func getParser(filename string) (parser, error) {
+func getParser(f []byte) (parser, error) {
 	for _, reader := range parsers {
-		if reader.isValidFormat(filename) {
+		if reader.isValidFormat(f) {
 			return reader, nil
 		}
 	}
-	return nil, errors.New("No valid parser found for JMX file: " + filename)
+	return nil, errors.New("No valid parser found for JMX file")
 }
+
 func createAttributeRegex(attrRegex string, literal bool) (*regexp.Regexp, error) {
 	var attrString string
 	// If attrRegex is the actual attribute name, and not a regex match

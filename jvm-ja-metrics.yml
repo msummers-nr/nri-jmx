@@ -1,0 +1,20 @@
+# Standard JVM Metrics
+name: JVM
+version: 1.0
+enabled: true
+jmx:
+  - object_name: java.lang:type=GarbageCollector,name=*
+    metrics:
+      - attributes: CollectionCount, CollectionTime
+  - object_name: java.lang:type=Memory
+    metrics:
+      - attributes: HeapMemoryUsage.Committed , HeapMemoryUsage.Init , HeapMemoryUsage.Max , HeapMemoryUsage.Used , NonHeapMemoryUsage.Committed , NonHeapMemoryUsage.Init , NonHeapMemoryUsage.Max , NonHeapMemoryUsage.Used
+  - object_name: java.lang:type=Threading
+    metrics:
+      - attributes: ThreadCount, TotalStartedThreadCount
+  - object_name: java.lang:type=ClassLoading
+    metrics:
+      - attributes: LoadedClassCount
+  - object_name: java.lang:type=Compilation
+    metrics:
+      - attributes: TotalCompilationTime

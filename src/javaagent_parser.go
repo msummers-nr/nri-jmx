@@ -1,15 +1,12 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
 
 	"github.com/newrelic/infra-integrations-sdk/data/metric"
 	"github.com/newrelic/infra-integrations-sdk/log"
-	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 )
 
@@ -17,19 +14,11 @@ type javaAgentJmxParser struct {
 }
 
 func init() {
-	addParser(javaAgentJmxParser{})
+	registerParser(javaAgentJmxParser{})
 }
 
-func (p javaAgentJmxParser) parse(f string) ([]*domainDefinition, error) {
-	// Check that the filepath is an absolute path
-	if !filepath.IsAbs(f) {
-		err := errors.Errorf("Invalid metrics collection path %s. Metrics collection files must be specified as absolute paths.", f)
-		log.Error("%s", err)
-		return nil, err
-	}
-
-	// Parse the old yaml file into a raw definition
-	javaAgentConfig, err := parseJavaAgentYaml(f)
+func (p javaAgentJmxParser) parse(f []byte) ([]*domainDefinition, error) {
+	javaAgentConfig, err := p.parseJavaAgentYaml(f)
 	if err != nil {
 		log.Error("Failed to parse collection definition file %s: %s", f, err)
 		return nil, err
@@ -52,7 +41,7 @@ func (p javaAgentJmxParser) parse(f string) ([]*domainDefinition, error) {
 	//outputOHIJmxFile(f, domain)
 
 	// Validate the definition and create a collection object
-	newCollection, err := normalizeJmxDefinition(javaAgentConfig)
+	newCollection, err := p.normalizeJmxDefinition(javaAgentConfig)
 	if err != nil {
 		log.Error("Failed to parse collection definition %s: %s", f, err)
 		os.Exit(1)
@@ -60,8 +49,12 @@ func (p javaAgentJmxParser) parse(f string) ([]*domainDefinition, error) {
 
 	return newCollection, nil
 }
-func (p javaAgentJmxParser) isValidFormat(f string) bool {
-	// TODO
+func (p javaAgentJmxParser) isValidFormat(f []byte) bool {
+	re := regexp.MustCompile(`(?ims)^jmx:(.*?)$`)
+	r := re.FindAllStringSubmatch(string(f), -1)
+	if len(r) == 1 {
+		return true
+	}
 	return false
 }
 
@@ -126,14 +119,9 @@ type metricDefinition struct {
 //	MetricName string `yaml:"metric_name"`
 //}
 
-func parseJavaAgentYaml(filename string) (*javaAgentJmxConfig, error) {
-	yamlFile, err := ioutil.ReadFile(filename)
-	if err != nil {
-		log.Error("failed to open %s: %s", filename, err)
-		return nil, err
-	}
+func (p javaAgentJmxParser) parseJavaAgentYaml(f []byte) (*javaAgentJmxConfig, error) {
 	var m javaAgentJmxConfig
-	if err := yaml.Unmarshal(yamlFile, &m); err != nil {
+	if err := yaml.Unmarshal(f, &m); err != nil {
 		log.Error("failed to parse collection: %s", err)
 		return nil, err
 	}
@@ -141,7 +129,7 @@ func parseJavaAgentYaml(filename string) (*javaAgentJmxConfig, error) {
 }
 
 // Simple Parse: Does not "map/reduce" domains and queries
-func normalizeJmxDefinition(m *javaAgentJmxConfig) ([]*domainDefinition, error) {
+func (p javaAgentJmxParser) normalizeJmxDefinition(m *javaAgentJmxConfig) ([]*domainDefinition, error) {
 	var domains []*domainDefinition
 
 	for _, jmxObject := range m.JMX {
@@ -156,11 +144,11 @@ func normalizeJmxDefinition(m *javaAgentJmxConfig) ([]*domainDefinition, error) 
 				if err != nil {
 					continue
 				}
-				outAttrs = append(outAttrs, &attributeRequest{attrRegexp: regex, metricType: convertMetricType(thisMetric.Type), metricName: getMetricName(thisAttr, jmxObject.RootMetricName, domainAndQuery[1])})
+				outAttrs = append(outAttrs, &attributeRequest{attrRegexp: regex, metricType: p.convertMetricType(thisMetric.Type), metricName: p.getMetricName(thisAttr, jmxObject.RootMetricName, domainAndQuery[1])})
 			}
 			outbeans = append(outbeans, &beanRequest{beanQuery: domainAndQuery[1], attributes: outAttrs})
 		}
-		domains = append(domains, &domainDefinition{domain: domainAndQuery[0], eventType: getEventType(m.Name, domainAndQuery[0]), beans: outbeans})
+		domains = append(domains, &domainDefinition{domain: domainAndQuery[0], eventType: p.getEventType(m.Name, domainAndQuery[0]), beans: outbeans})
 	}
 	return domains, nil
 }
@@ -232,8 +220,8 @@ func normalizeJmxDefinition(m *javaAgentJmxConfig) ([]*domainDefinition, error) 
 //	fmt.Printf("%s", string(m))
 //}
 
-func convertMetricType(metrictype string) metric.SourceType {
-	switch strings.TrimSpace(metrictype) {
+func (p javaAgentJmxParser) convertMetricType(metrictype string) metric.SourceType {
+	switch strings.TrimSpace(strings.ToLower(metrictype)) {
 	case "simple":
 		return metric.GAUGE
 	case "monotonically_increasing":
@@ -245,14 +233,14 @@ func convertMetricType(metrictype string) metric.SourceType {
 	}
 }
 
-func getEventType(oldName string, domainName string) string {
+func (p javaAgentJmxParser) getEventType(oldName string, domainName string) string {
 	if oldName == "" {
-		return makeInsightsCompliant(defaultEventType + metricSep + domainName)
+		return p.makeInsightsCompliant(defaultEventType + metricSep + domainName)
 	}
-	return makeInsightsCompliant(oldName + metricSep + domainName)
+	return p.makeInsightsCompliant(oldName + metricSep + domainName)
 }
 
-func getMetricName(attrName string, rootMetricName string, query string) string {
+func (p javaAgentJmxParser) getMetricName(attrName string, rootMetricName string, query string) string {
 	if rootMetricName == "" {
 		return attrName
 	}
@@ -273,10 +261,10 @@ func getMetricName(attrName string, rootMetricName string, query string) string 
 			}
 		}
 	}
-	return makeInsightsCompliant(rootMetricName + metricSep + attrName)
+	return p.makeInsightsCompliant(rootMetricName + metricSep + attrName)
 }
 
-func makeInsightsCompliant(inString string) string {
+func (p javaAgentJmxParser) makeInsightsCompliant(inString string) string {
 	inString = strings.Replace(inString, " ", spaceSep, -1)
 	inString = strings.Replace(inString, "/", metricSep, -1)
 	return inString

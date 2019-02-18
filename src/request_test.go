@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"reflect"
 	"regexp"
 	"testing"
@@ -285,7 +286,8 @@ func TestHandleResponse(t *testing.T) {
 
 func TestDefaultMetricType(t *testing.T) {
 	eventType := "TestSample"
-	defs, err := parseYaml("../test/activemq.yml")
+	file, err := ioutil.ReadFile("../test/infra-activemq.yml")
+	defs, err := parseYaml(file)
 	if err != nil {
 		t.Error(err)
 	}

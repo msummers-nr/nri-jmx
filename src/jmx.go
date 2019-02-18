@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"os"
 	"strings"
 
@@ -29,7 +30,7 @@ const (
 var (
 	args argumentList
 
-	// Alias these functions for testing mocks
+	// Alias these functions for easy mocking
 	jmxOpen  = jmx.Open
 	jmxClose = jmx.Close
 	jmxQuery = jmx.Query
@@ -60,13 +61,21 @@ func main() {
 	}
 
 	for _, f := range strings.Split(args.CollectionFiles, ",") {
-		p, err := getParser(f)
+		file, err := ioutil.ReadFile(f)
 		if err != nil {
+			log.Error("Error reading JMX configuration file: %s error: %+v", f, err)
 			continue
 		}
 
-		d, err := p.parse(f)
+		p, err := getParser(file)
 		if err != nil {
+			log.Error("Error getting JMX parser for file: %s error: %+v", f, err)
+			continue
+		}
+
+		d, err := p.parse(file)
+		if err != nil {
+			log.Error("Error parsing JMX file: %s error: %+v", f, err)
 			continue
 		}
 

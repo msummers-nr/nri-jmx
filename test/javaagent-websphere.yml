@@ -1,0 +1,13 @@
+name: Custom WebSphere JMX
+version: 1.0
+enabled: true
+jmx:  
+  - object_name: WebSphere:type=JDBCProvider,j2eeType=JDBCResource,node=*,process=*,name=*,*    
+    metrics:
+      - attributes: AllocateCount, CloseCount, ConnectionHandleCount, CreateCount, FaultCount, FreePoolSize, JDBCTime, ManagedConnectionCount, PercentMaxed, PercentUsed, PoolSize, PrepStmtCacheDiscardCount, ReturnCount, UseTime, WaitingThreadCount, WaitTime
+  - object_name: WebSphere:type=ORB,node=*,process=*,name=*,*
+    metrics:      
+      - attributes: ConcurrentRequestCount, LookupTime, RequestCount, ProcessingTime
+  - object_name: WebSphere:type=DynaCache,process=*,*
+    metrics:
+      - attributes: ClientRequestCount, DependencyIDBasedInvalidationsFromDisk, DependencyIDsBufferedForDisk, DependencyIDsOffloadedToDisk, DependencyIDsOnDisk, DistributedRequestCount, ExplicitDiskInvalidationCount, ExplicitInvalidationCount, ExplicitInvalidationsFromDisk, ExplicitMemoryInvalidationCount, GarbageCollectorInvalidationsFromDisk, HitsInMemoryCount, HitsOnDisk, HitsOnDiskCount, InMemoryAndDiskCacheEntryCount, InMemoryCacheEntryCount, LocalExplicitInvalidationCount, LruInvalidationCount, MaxInMemoryCacheEntryCount, MissCount, ObjectsOnDisk, OverflowInvalidationsFromDisk, PendingRemovalFromDisk, RemoteCreationCount, RemoteExplicitInvalidationCount, RemoteHitCount, TemplateBasedInvalidationsFromDisk, TemplatesBufferedForDisk, TemplatesOffloadedToDisk, TemplatesOnDisk, TimeoutInvalidationCount, TimeoutInvalidationsFromDisk

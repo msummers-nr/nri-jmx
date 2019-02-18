@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"reflect"
 	"regexp"
 	"testing"
@@ -10,20 +11,40 @@ import (
 	"github.com/newrelic/infra-integrations-sdk/data/metric"
 )
 
+func TestIsValidInfraFormat(t *testing.T) {
+	testCases := []struct {
+		file           string
+		expectedResult bool
+	}{
+		{"../test/javaagent-websphere.yml", false},
+		{"../test/infra-good.yml", true},
+		{"../test/empty.yml", false},
+	}
+	for _, tc := range testCases {
+		file, _ := ioutil.ReadFile(tc.file)
+		j := infraJmxParser{}
+		c := j.isValidFormat(file)
+		if c != tc.expectedResult {
+			t.Errorf("Did not get expected result for %s %+v ", tc.file, c)
+		}
+	}
+}
+
 func TestParseYaml(t *testing.T) {
 	testCases := []struct {
 		file         string
 		expectedFail bool
 	}{
-		{"../test/test-sample.yml", false},
-		{"../test/test-sample-bad.yml", true},
-		{"../test/test-sample-nonexistant.yml", true},
+		{"../test/infra-good.yml", false},
+		{"../test/infra-bad.yml", true},
+		{"../test/empty.yml", true},
 	}
 
 	for _, tc := range testCases {
-		_, err := parseYaml(tc.file)
-		if (err != nil) != tc.expectedFail {
-			t.Error("Did not get expected error state")
+		file, err := ioutil.ReadFile(tc.file)
+		c, err := parseYaml(file)
+		if (err != nil) && (!tc.expectedFail) {
+			t.Errorf("Did not get expected error state for %s %+v %+v ", tc.file, err, c)
 		}
 	}
 }
@@ -258,7 +279,8 @@ func TestParseCollectionDefinition(t *testing.T) {
 		},
 	}
 
-	c, err := parseYaml("../test/test-sample.yml")
+	file, err := ioutil.ReadFile("../test/infra-good.yml")
+	c, err := parseYaml(file)
 	domains, err := parseCollectionDefinition(c)
 	if err != nil {
 		t.Error(err)
@@ -273,7 +295,8 @@ func TestParseCollectionDefinition(t *testing.T) {
 
 func TestParseCollectionDefinition_Fail(t *testing.T) {
 
-	c, err := parseYaml("../test/test-sample-bad2.yml")
+	file, err := ioutil.ReadFile("../test/infra-bad2.yml")
+	c, err := parseYaml(file)
 	_, err = parseCollectionDefinition(c)
 	if err == nil {
 		t.Error("Expected error")

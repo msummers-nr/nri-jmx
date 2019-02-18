@@ -2,27 +2,17 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"os"
-	"path/filepath"
 	"regexp"
 
 	"github.com/newrelic/infra-integrations-sdk/data/metric"
 	"github.com/newrelic/infra-integrations-sdk/log"
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 type infraJmxParser struct {
 }
 
-func (p infraJmxParser) parse(f string) ([]*domainDefinition, error) {
-	// Check that the filepath is an absolute path
-	if !filepath.IsAbs(f) {
-		log.Error("Invalid configuration file path %s. JMX configuration files must be specified as absolute paths.", f)
-		os.Exit(1)
-	}
-
-	// Parse the yaml file into a raw definition
+func (p infraJmxParser) parse(f []byte) ([]*domainDefinition, error) {
 	collectionDefinition, err := parseYaml(f)
 	if err != nil {
 		log.Error("Failed to parse configuration file %s: %s", f, err)
@@ -38,13 +28,17 @@ func (p infraJmxParser) parse(f string) ([]*domainDefinition, error) {
 
 	return domainDefinition, nil
 }
-func (p infraJmxParser) isValidFormat(f string) bool {
-	// TODO
-	return true
+func (p infraJmxParser) isValidFormat(f []byte) bool {
+	re := regexp.MustCompile(`(?ims)^collect:(.*?)$`)
+	r := re.FindAllStringSubmatch(string(f), -1)
+	if len(r) == 1 {
+		return true
+	}
+	return false
 }
 
 func init() {
-	addParser(infraJmxParser{})
+	registerParser(infraJmxParser{})
 }
 
 // collectionDefinition is a struct to aid the automatic
@@ -77,17 +71,9 @@ var (
 
 // parseYaml reads a yaml file and parses it into a collectionDefinition.
 // It validates syntax only and not content
-func parseYaml(filename string) (*collectionDefinition, error) {
-	// Read the file
-	yamlFile, err := ioutil.ReadFile(filename)
-	if err != nil {
-		log.Error("failed to open %s: %s", filename, err)
-		return nil, err
-	}
-
-	// Parse the file
+func parseYaml(f []byte) (*collectionDefinition, error) {
 	var c collectionDefinition
-	if err := yaml.Unmarshal(yamlFile, &c); err != nil {
+	if err := yaml.Unmarshal(f, &c); err != nil {
 		log.Error("failed to parse collection: %s", err)
 		return nil, err
 	}

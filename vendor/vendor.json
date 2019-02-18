@@ -27,6 +27,12 @@
 			"revisionTime": "2018-02-21T22:46:20Z"
 		},
 		{
+			"checksumSHA1": "at1y9um6fBwntQTOsP5eCFDqNfA=",
+			"path": "github.com/go-test/deep",
+			"revision": "042da051cf3189d80f667339b822c7effac29cd6",
+			"revisionTime": "2018-11-18T22:09:53Z"
+		},
+		{
 			"checksumSHA1": "c0Z2sKLKi+IKRVzq0IzNvqvfCrQ=",
 			"path": "github.com/google/shlex",
 			"revision": "c34317bd91bf98fab745d77b03933cf8769299fe",

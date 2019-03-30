@@ -51,88 +51,74 @@
 			"revisionTime": "2018-05-06T08:24:08Z"
 		},
 		{
-			"checksumSHA1": "XdtijzwGRz6BNBgsd/J+d/fvN9k=",
+			"checksumSHA1": "ZfId5ZYn7jmL0xTxooHcxrLlXoA=",
 			"path": "github.com/newrelic/infra-integrations-sdk/args",
-			"revision": "be1a6cdadeabe7879263dae229a75525051bbb31",
-			"revisionTime": "2018-08-13T11:54:35Z"
+			"revision": "def6661fb2892b29a94972e68b8d9b14f73f2542",
+			"revisionTime": "2019-03-18T15:14:23Z",
+			"version": "v3.1.3",
+			"versionExact": "v3.1.3"
 		},
 		{
 			"checksumSHA1": "KaZLSd/JUZz/mqfW3jFd1j2QdWA=",
 			"path": "github.com/newrelic/infra-integrations-sdk/data/event",
-			"revision": "be1a6cdadeabe7879263dae229a75525051bbb31",
-			"revisionTime": "2018-08-13T11:54:35Z"
+			"revision": "def6661fb2892b29a94972e68b8d9b14f73f2542",
+			"revisionTime": "2019-03-18T15:14:23Z",
+			"version": "v3.1.3",
+			"versionExact": "v3.1.3"
 		},
 		{
 			"checksumSHA1": "EOoxXGqFDPkCvj7wec2S5kCXY2I=",
 			"path": "github.com/newrelic/infra-integrations-sdk/data/inventory",
-			"revision": "be1a6cdadeabe7879263dae229a75525051bbb31",
-			"revisionTime": "2018-08-13T11:54:35Z"
+			"revision": "def6661fb2892b29a94972e68b8d9b14f73f2542",
+			"revisionTime": "2019-03-18T15:14:23Z",
+			"version": "v3.1.3",
+			"versionExact": "v3.1.3"
 		},
 		{
-			"checksumSHA1": "bsQrXQwKK7ZK3HgWQzkMu2zt4jA=",
+			"checksumSHA1": "39SDqHpLpE9J1nrIwYI+8ukzXJs=",
 			"path": "github.com/newrelic/infra-integrations-sdk/data/metric",
-			"revision": "be1a6cdadeabe7879263dae229a75525051bbb31",
-			"revisionTime": "2018-08-13T11:54:35Z"
+			"revision": "def6661fb2892b29a94972e68b8d9b14f73f2542",
+			"revisionTime": "2019-03-18T15:14:23Z",
+			"version": "v3.1.3",
+			"versionExact": "v3.1.3"
 		},
 		{
-			"checksumSHA1": "iYqZm+K1690zh7ihc+yDbKftd9g=",
+			"checksumSHA1": "Roed3yHqlmKnpp8gDhw8Pgh+oW8=",
 			"path": "github.com/newrelic/infra-integrations-sdk/integration",
-			"revision": "be1a6cdadeabe7879263dae229a75525051bbb31",
-			"revisionTime": "2018-08-13T11:54:35Z"
+			"revision": "def6661fb2892b29a94972e68b8d9b14f73f2542",
+			"revisionTime": "2019-03-18T15:14:23Z",
+			"version": "v3.1.3",
+			"versionExact": "v3.1.3"
 		},
 		{
-			"checksumSHA1": "miKNZdCc3v8MXndG2oZ+3LuCHPw=",
+			"checksumSHA1": "yqj7MwhatN5UNdMaCrfjemYhGMw=",
 			"path": "github.com/newrelic/infra-integrations-sdk/jmx",
-			"revision": "be1a6cdadeabe7879263dae229a75525051bbb31",
-			"revisionTime": "2018-08-13T11:54:35Z"
+			"revision": "def6661fb2892b29a94972e68b8d9b14f73f2542",
+			"revisionTime": "2019-03-18T15:14:23Z",
+			"version": "v3.1.3",
+			"versionExact": "v3.1.3"
 		},
 		{
 			"checksumSHA1": "6/DhD+/LhC/k3NaLgkpd6iE8b5E=",
 			"path": "github.com/newrelic/infra-integrations-sdk/log",
-			"revision": "be1a6cdadeabe7879263dae229a75525051bbb31",
-			"revisionTime": "2018-08-13T11:54:35Z"
+			"revision": "def6661fb2892b29a94972e68b8d9b14f73f2542",
+			"revisionTime": "2019-03-18T15:14:23Z",
+			"version": "v3.1.3",
+			"versionExact": "v3.1.3"
 		},
 		{
-			"checksumSHA1": "Bmaab3vN4SGpT+/8L7Ouj365z6o=",
+			"checksumSHA1": "BsHp62Etporko0d+4GpVxrP2qtw=",
 			"path": "github.com/newrelic/infra-integrations-sdk/persist",
-			"revision": "be1a6cdadeabe7879263dae229a75525051bbb31",
-			"revisionTime": "2018-08-13T11:54:35Z"
+			"revision": "def6661fb2892b29a94972e68b8d9b14f73f2542",
+			"revisionTime": "2019-03-18T15:14:23Z",
+			"version": "v3.1.3",
+			"versionExact": "v3.1.3"
 		},
 		{
-			"checksumSHA1": "uEc9/1HbYGeK7wPStF6FmUlfzGE=",
-			"path": "github.com/nicksnyder/go-i18n/i18n",
-			"revision": "7a73c96f2026ad7c4b56c7a323fb1466374589a5",
-			"revisionTime": "2019-01-06T23:08:51Z"
-		},
-		{
-			"checksumSHA1": "o/4Fy7/+tzNeueNBThMfD1F94PI=",
-			"path": "github.com/nicksnyder/go-i18n/i18n/bundle",
-			"revision": "7a73c96f2026ad7c4b56c7a323fb1466374589a5",
-			"revisionTime": "2019-01-06T23:08:51Z"
-		},
-		{
-			"checksumSHA1": "AdAaAicrUl+1k0wHNsjLU1c6z9A=",
-			"path": "github.com/nicksnyder/go-i18n/i18n/language",
-			"revision": "7a73c96f2026ad7c4b56c7a323fb1466374589a5",
-			"revisionTime": "2019-01-06T23:08:51Z"
-		},
-		{
-			"checksumSHA1": "XfE9yMmmRqZQGbtIP7f6F63Zx0w=",
-			"path": "github.com/nicksnyder/go-i18n/i18n/translation",
-			"revision": "7a73c96f2026ad7c4b56c7a323fb1466374589a5",
-			"revisionTime": "2019-01-06T23:08:51Z"
-		},
-		{
-			"checksumSHA1": "NzzMfGmmPoTGVwLZDkj3FXXDvCA=",
-			"path": "github.com/pelletier/go-toml",
-			"revision": "27c6b39a135b7dc87a14afb068809132fb7a9a8f",
-			"revisionTime": "2018-11-24T00:27:27Z"
-		},
-		{
-			"checksumSHA1": "ljd3FhYRJ91cLZz3wsH9BQQ2JbA=",
+			"checksumSHA1": "0H/VjT8w1CB702qWpbYMqr65Mf0=",
 			"path": "github.com/pkg/errors",
-			"revision": "816c9085562cd7ee03e7f8188a1cfd942858cded",
-			"revisionTime": "2018-03-11T21:45:15Z"
+			"revision": "ffb6e22f01932bf7ac35e0bad9be11f01d1c8685",
+			"revisionTime": "2019-01-09T06:16:28Z"
 		},
 		{
 			"checksumSHA1": "LuFv4/jlrmFNnDb/5SCSEPAM9vU=",
@@ -147,10 +133,28 @@
 			"revisionTime": "2018-06-26T19:55:58Z"
 		},
 		{
-			"checksumSHA1": "iBU4tIAdhfmuFGwEjb1yce0Og/4=",
-			"path": "gopkg.in/alecthomas/kingpin.v3-unstable",
-			"revision": "df19058c872cddcd279411d709047160e543a700",
-			"revisionTime": "2018-08-10T19:35:52Z"
+			"checksumSHA1": "LHHkpIoYHpQiBc7y0JaTmf3VbVQ=",
+			"path": "golang.org/x/tools/go/ast/astutil",
+			"revision": "7f7074d5bcfd282eb16bc382b0bb3da762461985",
+			"revisionTime": "2019-02-02T10:20:54Z"
+		},
+		{
+			"checksumSHA1": "/UCuUGzk9/QJTUcTkYDRdCas3Tc=",
+			"path": "golang.org/x/tools/go/buildutil",
+			"revision": "7f7074d5bcfd282eb16bc382b0bb3da762461985",
+			"revisionTime": "2019-02-02T10:20:54Z"
+		},
+		{
+			"checksumSHA1": "VQ0sTJYKkzzAvWA6zvaKD5lar0o=",
+			"path": "golang.org/x/tools/go/internal/cgo",
+			"revision": "7f7074d5bcfd282eb16bc382b0bb3da762461985",
+			"revisionTime": "2019-02-02T10:20:54Z"
+		},
+		{
+			"checksumSHA1": "wr2oXQWRoxvsHoc349wVfTzpXfM=",
+			"path": "golang.org/x/tools/go/loader",
+			"revision": "7f7074d5bcfd282eb16bc382b0bb3da762461985",
+			"revisionTime": "2019-02-02T10:20:54Z"
 		},
 		{
 			"checksumSHA1": "ZSWoOPUNRr5+3dhkLK3C4cZAQPk=",
